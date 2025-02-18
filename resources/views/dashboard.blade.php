@@ -1,130 +1,165 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-100">
+<html lang="en" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite('resources/css/app.css')
+    <title>Dani Motor - Dashboard</title>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter var', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#FFF7E6',
+                            100: '#FFEFC8',
+                            200: '#FFE08A',
+                            300: '#FFD24D',
+                            400: '#FFC929',
+                            500: '#FFB800',
+                            600: '#CC9300',
+                            700: '#996E00',
+                            800: '#664900',
+                            900: '#332500',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="h-full">
+<body class="h-full" x-data="{ 
+    sidebarOpen: true, 
+    mobileSidebarOpen: false,
+    activeTab: 'dashboard',
+    profileDropdownOpen: false,
+    notificationsOpen: false,
+    
+    setupCharts() {
+        setTimeout(() => {
+            // Monthly sales chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            new Chart(salesCtx, {
+                type: 'line',
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
 
-<div class="min-h-full">
-    <nav class="bg-gray-800" x-data="{ isOpen: false }">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex h-16 items-center justify-between">
-          <div class="flex items-center">
-            {{-- <div class="shrink-0">
-              <img class="size-8" src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
-            </div> --}}
-            <div class="hidden md:block">
-              <div class="ml-10 flex items-baseline space-x-4">
-                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <a href="#" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Dashboard</a>
-                <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Transaksi</a>
-                <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Laporan Keuangan</a>
-              </div>
+            // Category distribution chart
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            new Chart(categoryCtx, {
+                type: 'doughnut',
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }, 100);
+    }
+}" x-init="setupCharts()">
+
+    <!-- Mobile menu button -->
+    <div class="lg:hidden fixed top-4 right-4 z-50">
+        <button @click="mobileSidebarOpen = !mobileSidebarOpen" class="p-2 rounded-full bg-white shadow-lg border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" x-show="!mobileSidebarOpen" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" x-show="mobileSidebarOpen" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto lg:h-screen"
+         :class="{'translate-x-0': mobileSidebarOpen, '-translate-x-full': !mobileSidebarOpen}">
+        <!-- Sidebar header -->
+        <div class="flex items-center justify-center h-16 px-6 border-b border-gray-800">
+            <div class="flex items-center space-x-3">
+                <div class="bg-primary-500 text-white font-bold text-xl p-2 rounded-lg">DM</div>
+                <h1 class="text-xl font-bold text-white tracking-wider">Dani Motor</h1>
             </div>
-          </div>
-          <div class="hidden md:block">
-            <div class="ml-4 flex items-center md:ml-6">
-              {{-- <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-                <span class="absolute -inset-1.5"></span>
-                <span class="sr-only">View notifications</span>
-                <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+        </div>
+
+        <!-- Sidebar content -->
+        <nav class="mt-6 px-3 space-y-1">
+            <a @click.prevent="activeTab = 'dashboard'" href="#" class="group flex items-center px-4 py-3 text-base font-medium rounded-md transition-all duration-200" 
+                :class="activeTab === 'dashboard' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" :class="activeTab === 'dashboard' ? 'text-primary-400' : 'text-gray-400 group-hover:text-white'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
-              </button> --}}
-  
-              <!-- Profile dropdown -->
-              <div class="relative ml-3">
-                <div>
-                  <button type="button" @click="isOpen = !isOpen" class="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                    <span class="absolute -inset-1.5"></span>
-                    <span class="sr-only">Open user menu</span>
-                    <img class="size-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                  </button>
-                </div>
+                Dashboard
+            </a>
 
-                <div x-show="isOpen"
-                x-transition:enter="transition ease-out duration-100 transform"
-                x-transition:enter-start="opacity-0 scale-95"
-                x-transition:enter-end="opacity-100 scale-100"
-                x-transition:leave="transition ease-in duration-75 transform"
-                x-transition:leave-start="opacity-100 scale-100"
-                x-transition:leave-end="opacity-0 scale-95" 
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                  <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Pengaturan</a>
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Logout</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="-mr-2 flex md:hidden">
-            <!-- Mobile menu button -->
-            <button type="button" @click="isOpen = !isOpen" class="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden" aria-controls="mobile-menu" aria-expanded="false">
-              <span class="absolute -inset-0.5"></span>
-              <span class="sr-only">Open main menu</span>
-              <!-- Menu open: "hidden", Menu closed: "block" -->
-              <svg :class="{'hidden': isOpen, 'block': !isOpen }" class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-              </svg>
-              <!-- Menu open: "block", Menu closed: "hidden" -->
-              <svg :class="{'block': isOpen, 'hidden': !isOpen }" class="hidden size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+            <a @click.prevent="activeTab = 'transactions'" href="#" class="group flex items-center px-4 py-3 text-base font-medium rounded-md transition-all duration-200" 
+                :class="activeTab === 'transactions' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" :class="activeTab === 'transactions' ? 'text-primary-400' : 'text-gray-400 group-hover:text-white'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Transaksi
+            </a>
+
+            <a @click.prevent="activeTab = 'finance'" href="#" class="group flex items-center px-4 py-3 text-base font-medium rounded-md transition-all duration-200" 
+                :class="activeTab === 'finance' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" :class="activeTab === 'finance' ? 'text-primary-400' : 'text-gray-400 group-hover:text-white'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Laporan Keuangan
+            </a>
+
+            <a @click.prevent="activeTab = 'inventory'" href="#" class="group flex items-center px-4 py-3 text-base font-medium rounded-md transition-all duration-200" 
+                :class="activeTab === 'inventory' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" :class="activeTab === 'inventory' ? 'text-primary-400' : 'text-gray-400 group-hover:text-white'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                Inventaris
+            </a>
+
+            <a @click.prevent="activeTab = 'customers'" href="#" class="group flex items-center px-4 py-3 text-base font-medium rounded-md transition-all duration-200" 
+                :class="activeTab === 'customers' ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" :class="activeTab === 'customers' ? 'text-primary-400' : 'text-gray-400 group-hover:text-white'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                Pelanggan
+            </a>
+        </nav>
+
+        <!-- Sidebar footer -->
+        <div class="absolute bottom-0 w-full p-4 border-t border-gray-800">
+            <a href="#" class="flex items-center px-4 py-3 text-gray-300 rounded-md hover:bg-gray-800 hover:text-white transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout
+            </a>
         </div>
-      </div>
-  
-      <!-- Mobile menu, show/hide based on menu state. -->
-      <div x-show="isOpen" class="md:hidden" id="mobile-menu">
-        <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-          <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-          <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a>
-          <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Transaksi</a>
-          <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Laporan Keuangan</a>
-        </div>
-        <div class="border-t border-gray-700 pt-4 pb-3">
-          <div class="flex items-center px-5">
-            <div class="shrink-0">
-              {{-- <img class="size-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt=""> --}}
-            </div>
-            <div class="ml-3">
-              <div class="text-base/5 font-medium text-white">Dani Motor</div>
-              <div class="text-sm font-medium text-gray-400">danimotor@gmail.com</div>
-            </div>
-            {{-- <button type="button" class="relative ml-auto shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-              <span class="absolute -inset-1.5"></span>
-              <span class="sr-only">View notifications</span>
-              <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-              </svg>
-            </button> --}}
-          </div>
-          <div class="mt-3 space-y-1 px-2">
-            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Pengaturan</a>
-            <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white">Logout</a>
-          </div>
-        </div>
-      </div>
-    </nav>
-  
-    <header class="bg-white shadow-sm">
-      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
-      </div>
-    </header>
-    <main>
-      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <!-- Your content -->
-      </div>
-    </main>
-  </div>
-  
-</body>
-</html>
+    </div>
