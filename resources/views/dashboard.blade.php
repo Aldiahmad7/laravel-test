@@ -39,59 +39,19 @@
     mobileSidebarOpen: false,
     activeTab: 'dashboard',
     profileDropdownOpen: false,
-    notificationsOpen: false,
-    
-    setupCharts() {
-        setTimeout(() => {
-            // Monthly sales chart
-            const salesCtx = document.getElementById('salesChart').getContext('2d');
-            new Chart(salesCtx, {
-                type: 'line',
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                display: true,
-                                color: 'rgba(0, 0, 0, 0.05)'
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Category distribution chart
-            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-            new Chart(categoryCtx, {
-                type: 'doughnut',
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                        }
-                    },
-                    cutout: '65%'
-                }
-            });
-        }, 100);
-    }
-}" x-init="setupCharts()">
+    notificationsOpen: false
+}" >
 
     <div class="flex h-full">
+        <!-- Mobile sidebar overlay -->
+        <div 
+            x-show="mobileSidebarOpen" 
+            @click="mobileSidebarOpen = false" 
+            class="fixed inset-0 z-20 bg-gray-900 bg-opacity-50 lg:hidden">
+        </div>
+
         <!-- Mobile menu button -->
-        <div class="lg:hidden fixed top-4 right-4 z-50">
+        <div class="fixed top-4 left-4 z-30 lg:hidden">
             <button @click="mobileSidebarOpen = !mobileSidebarOpen" class="p-2 rounded-full bg-white shadow-lg border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" x-show="!mobileSidebarOpen" />
@@ -101,8 +61,8 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto h-full"
-             :class="{'translate-x-0': mobileSidebarOpen, '-translate-x-full': !mobileSidebarOpen}">
+        <div class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 h-full"
+             :class="{'translate-x-0': mobileSidebarOpen, '-translate-x-full': !mobileSidebarOpen, 'lg:relative': true}">
             <!-- Sidebar header -->
             <div class="flex items-center justify-center h-16 px-6 border-b border-gray-800">
                 <div class="flex items-center space-x-3">
@@ -165,53 +125,103 @@
             </div>
         </div>
 
-<!-- Main content area -->
-<div class="flex-1 flex flex-col overflow-hidden ml-64">
-    <!-- Header Section -->
-    <header class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <!-- Left section with page title -->
-                <div class="flex items-center">
-                    <h1 class="text-2xl font-semibold text-gray-800" x-text="
-                        activeTab === 'dashboard' ? 'Dashboard' : 
-                        activeTab === 'transactions' ? 'Transaksi' :
-                        activeTab === 'finance' ? 'Laporan Keuangan' :
-                        activeTab === 'inventory' ? 'Inventaris' :
-                        activeTab === 'customers' ? 'Pelanggan' : 'Dashboard'
-                    "></h1>
-                </div>
-                
-                <!-- Right section with search, notifications and profile -->
-                <div class="flex items-center space-x-4">
-                    <!-- Search box -->
-                    <div class="relative">
-                        <input type="text" placeholder="Cari..." class="w-64 pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent">
-                        <div class="absolute left-3 top-2.5 text-gray-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
+        <!-- Main content area -->
+        <div class="flex-1 flex flex-col overflow-hidden w-full">
+            <!-- Header Section -->
+            <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10 w-full">
+                <div class="mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between h-16">
+                        <!-- Left section with page title -->
+                        <div class="flex items-center ml-0 lg:ml-0">
+                            <h1 class="text-xl md:text-2xl font-semibold text-gray-800 pl-12 lg:pl-0" x-text="
+                                activeTab === 'dashboard' ? 'Dashboard' : 
+                                activeTab === 'transactions' ? 'Transaksi' :
+                                activeTab === 'finance' ? 'Laporan Keuangan' :
+                                activeTab === 'inventory' ? 'Inventaris' :
+                                activeTab === 'customers' ? 'Pelanggan' : 'Dashboard'
+                            "></h1>
                         </div>
-                    </div>
-                                        
-                    <!-- Profile dropdown -->
-                    <div class="relative ml-3">
-                        <div>
-                            <button @click="profileDropdownOpen = !profileDropdownOpen" class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" id="user-menu-button">
-                                <div class="h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-medium">AD</div>
-                                <span class="ml-2 text-gray-700">Admin Dani</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        
+                        <!-- Right section with search and profile -->
+                        <div class="flex items-center space-x-2 md:space-x-4">
+                            <!-- Search box - hidden on small screens -->
+                            <div class="relative hidden md:block">
+                                <input type="text" placeholder="Cari..." class="w-40 lg:w-64 pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent">
+                                <div class="absolute left-3 top-2.5 text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Search icon for mobile -->
+                            <button class="md:hidden p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 focus:outline-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                             </button>
-                        </div>
-                        <div x-show="profileDropdownOpen" @click.away="profileDropdownOpen = false" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-10" role="menu">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profil</a>
-                            <div class="border-t border-gray-100"></div>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Logout</a>
+                                                
+                            <!-- Profile dropdown -->
+                            <div class="relative ml-3">
+                                <div>
+                                    <button @click="profileDropdownOpen = !profileDropdownOpen" class="flex items-center max-w-xs text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" id="user-menu-button">
+                                        <div class="h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center text-white font-medium">AD</div>
+                                        <span class="ml-2 text-gray-700 hidden md:inline">Admin Dani</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div x-show="profileDropdownOpen" @click.away="profileDropdownOpen = false" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-10" role="menu">
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Profil</a>
+                                    <div class="border-t border-gray-100"></div>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Logout</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </header>
+
+            <!-- Page content -->
+            <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+                <!-- Content for each tab -->
+                <div x-show="activeTab === 'dashboard'" class="space-y-6">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Dashboard</h2>
+                        <p class="text-gray-600">Selamat datang di Dashboard Dani Motor.</p>
+                    </div>
+                </div>
+                
+                <div x-show="activeTab === 'transactions'" class="space-y-6">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Transaksi</h2>
+                        <p class="text-gray-600">Halaman manajemen transaksi Dani Motor.</p>
+                    </div>
+                </div>
+                
+                <div x-show="activeTab === 'finance'" class="space-y-6">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Laporan Keuangan</h2>
+                        <p class="text-gray-600">Halaman laporan keuangan Dani Motor.</p>
+                    </div>
+                </div>
+                
+                <div x-show="activeTab === 'inventory'" class="space-y-6">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Inventaris</h2>
+                        <p class="text-gray-600">Halaman manajemen inventaris Dani Motor.</p>
+                    </div>
+                </div>
+                
+                <div x-show="activeTab === 'customers'" class="space-y-6">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Pelanggan</h2>
+                        <p class="text-gray-600">Halaman manajemen pelanggan Dani Motor.</p>
+                    </div>
+                </div>
+            </main>
         </div>
-    </header>
+    </div>
+</body>
+</html>
