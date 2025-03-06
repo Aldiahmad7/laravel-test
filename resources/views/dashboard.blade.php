@@ -40,28 +40,11 @@
     activeTab: 'dashboard',
     profileDropdownOpen: false,
     notificationsOpen: false
-}" >
+}">
 
     <div class="flex h-full">
-        <!-- Mobile sidebar overlay -->
-        <div
-            x-show="mobileSidebarOpen"
-            @click="mobileSidebarOpen = false"
-            class="fixed inset-0 z-20 bg-gray-900 bg-opacity-50 lg:hidden">
-        </div>
-
-        <!-- Mobile menu button -->
-        <div class="fixed top-4 left-4 z-30 lg:hidden">
-            <button @click="mobileSidebarOpen = !mobileSidebarOpen" class="p-2 rounded-full bg-white shadow-lg border border-gray-200 text-gray-600 hover:bg-gray-50 focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" x-show="!mobileSidebarOpen" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" x-show="mobileSidebarOpen" />
-                </svg>
-            </button>
-        </div>
-
         <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 h-full"
+        <aside class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 h-full"
              :class="{'translate-x-0': mobileSidebarOpen, '-translate-x-full': !mobileSidebarOpen, 'lg:relative': true}">
             <!-- Sidebar header -->
             <div class="flex items-center justify-center h-16 px-6 border-b border-gray-800">
@@ -119,11 +102,11 @@
                     Logout
                 </a>
             </div>
-        </div>
+        </aside>
 
         <!-- Main content area -->
         <div class="flex-1 flex flex-col overflow-hidden w-full">
-            <!-- Header Section -->
+            <!-- Header -->
             <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10 w-full">
                 <div class="mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -179,7 +162,7 @@
                 </div>
             </header>
 
-            <!-- Page content -->
+            <!-- Main content -->
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
                 <div x-show="activeTab === 'dashboard'" class="space-y-6">
                     <div class="bg-white rounded-lg shadow-sm p-6">
