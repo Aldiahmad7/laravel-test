@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dani Motor - Dashboard</title>
+    <title>Dani Motor</title>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js"></script>
@@ -177,6 +177,14 @@
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h2 class="text-xl font-semibold text-gray-800 mb-4">Dashboard</h2>
                         <p class="text-gray-600">Selamat datang di Dashboard Dani Motor.</p>
+                    </div>
+                </div>
+            </main>
+            <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+                <div x-show="activeTab === 'transactions'" class="space-y-6">
+                    <div class="bg-white rounded-lg shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Transaksi</h2>
+                        {{-- <p class="text-gray-600">Selamat datang di Dashboard Dani Motor.</p> --}}
                     </div>
                 </div>
             </main>
