@@ -173,18 +173,29 @@
 
             <!-- Main content -->
             <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+                <!-- Dashboard Tab -->
                 <div x-show="activeTab === 'dashboard'" class="space-y-6">
-                    <div class="bg-white rounded-lg shadow-sm p-6">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Dashboard</h2>
+                    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500 transition-all hover:shadow-lg">
+                        <div class="flex items-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <h2 class="text-xl font-semibold text-gray-800">Dashboard</h2>
+                        </div>
                         <p class="text-gray-600">Selamat datang di Dashboard Dani Motor.</p>
                     </div>
                 </div>
-            </main>
-            <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+
+                <!-- Transactions Tab -->
                 <div x-show="activeTab === 'transactions'" class="space-y-6">
-                    <div class="bg-white rounded-lg shadow-sm p-6">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Transaksi</h2>
-                        {{-- <p class="text-gray-600">Selamat datang di Dashboard Dani Motor.</p> --}}
+                    <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-green-500 transition-all hover:shadow-lg">
+                        <div class="flex items-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <h2 class="text-xl font-semibold text-gray-800">Transaksi</h2>
+                        </div>
+                        <!-- Transaction content will go here -->
                     </div>
                 </div>
             </main>
